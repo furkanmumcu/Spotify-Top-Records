@@ -1,0 +1,25 @@
+
+<html>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0-alpha.1/handlebars.min.js"></script>
+    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+    <script>
+      (function() {
+
+        console.log('selam');
+        
+        
+        var data = <%- JSON.stringify(data) %>;
+        console.log(data);
+        console.log(typeof data);
+        localStorage.setItem("data", JSON.stringify(data));
+        data.timeStamp = new Date().getTime();
+        window.location.href = "/result";
+        
+      
+    })();
+      
+
+    </script>
+
+
+</html>

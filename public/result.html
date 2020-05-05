@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Top Artists</title>
+
+    <link rel="stylesheet" href="assets/css/article-lists/article-list-vertical.css">
+    <link rel="stylesheet" href="assets/css/article-lists/article-list-vertical-2.css">
+
+</head>
+<body>
+    
+    <div id="profile">
+        <ul class="article-list-vertical-2" id="list2">
+
+            <li>
+               <a href="#" id="profile-pic" style="background-image: url('assets/images/pictures/sands-of-life.jpg')"></a>
+               <div>
+                   <h2 id="user-name">Interesting article title</h2>
+                   <p>You can view your top tracks/artists. Change by clicking the button. Have fun!</p>
+                   <a href="#" class="read-more" onclick="hi()">CHANGE IT &rarr;</a>
+               </div>
+           </li>
+    
+       </ul>
+    </div>
+
+
+    <div id="table">
+        <ul class="article-list-vertical" id="list">
+    
+        </ul>
+    </div>
+
+
+</body>
+
+<script>
+    let phase = 'a'
+    let data = JSON.parse(localStorage.getItem('data'));
+    console.log(data);
+    
+    //3600000 1 hour
+    if(data == null){
+        $('#profile').hide();
+        $('#table').hide();
+        window.location.href = "/";
+    }
+    
+    if(new Date().getTime() - data.timeStamp > 3600000){
+        $('#profile').hide();
+        $('#table').hide();
+        alert('login expired');
+        window.location.href = "/";
+    }
+
+    let me = data.me;
+    let artists = data.artists;
+    let tracks = data.tracks;
+
+    $('#user-name').text('Hey ' + me.display_name + '! Welcome!');
+    if(data.me.images.length > 0){
+        $('#profile-pic').css("background-image", "url("+data.me.images[0].url+")");  
+    }
+    var ul = $('#list');
+    
+    let name = artists.items[0].name;
+    let image = artists.items[0].images[0].url;
+
+    let track_name = tracks.items[0].name;
+    let track_image = tracks.items[0].album.images[0].url;
+    
+    let generate = function(text,image){
+        return '<li>\r\n            <a href=\"#\" style=\"background-image: url(\''+ image +'\')\"><\/a>\r\n            <div>\r\n                <h2><a href=\"#\">' + text +'<\/a><\/h2>\r\n            <\/div>\r\n        <\/li>'
+    }
+
+    
+    artists.items.forEach(element => {
+        ul.append(generate(element.name,element.images[0].url));
+    });
+    $("a").removeAttr('href');     
+
+    let hi = function(){
+        $('#list > li').remove();
+        if(phase === 'a'){
+            phase = 't';
+            tracks.items.forEach(element => {
+            ul.append(generate(element.name,element.album.images[0].url));
+            });
+            $("a").removeAttr('href'); 
+        }
+        else{
+            phase = 'a'
+            artists.items.forEach(element => {
+            ul.append(generate(element.name,element.images[0].url));
+            }); 
+            $("a").removeAttr('href'); 
+        }
+    }
+
+
+</script>
+
+
+</html>
